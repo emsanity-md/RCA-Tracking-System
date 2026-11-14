@@ -1,7 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import {
-  Activity,
   CheckCircle2,
   ClipboardList,
   GitBranch,
@@ -14,7 +14,9 @@ import {
   X,
 } from "lucide-react";
 
+import { Logo } from "@/components/logo";
 import type { ViewId } from "@/lib/incidents";
+import { useFocusTrap } from "@/lib/use-focus-trap";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS: {
@@ -32,18 +34,12 @@ const NAV_ITEMS: {
 
 function Brand() {
   return (
-    <div className="flex items-center gap-3 px-1">
-      <span className="grid size-9 shrink-0 place-items-center rounded-xl border border-border bg-foreground text-background">
-        <Activity aria-hidden="true" className="size-4.5" strokeWidth={2.2} />
-      </span>
-      <span className="min-w-0">
-        <span className="block font-heading text-[0.98rem] font-bold tracking-[-0.02em] text-foreground">
-          IncidentTrack
-        </span>
-        <span className="block text-[0.68rem] tracking-[0.08em] text-muted-foreground uppercase">
-          RCA workspace
-        </span>
-      </span>
+    <div className="min-w-0 px-1">
+      <Logo
+        className="gap-2.5"
+        markClassName="size-9"
+        wordmarkClassName="leading-[1.25]"
+      />
     </div>
   );
 }
@@ -126,6 +122,10 @@ function SidebarBody({
         <button
           type="button"
           onClick={onToggleTheme}
+          aria-label={
+            theme === "dark" ? "Switch to light theme" : "Switch to dark theme"
+          }
+          aria-pressed={theme === "light"}
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:outline-none"
         >
           {theme === "dark" ? (
@@ -165,6 +165,23 @@ export function Sidebar({
   onLogout: () => void;
   onCloseMobile: () => void;
 }) {
+  const drawerRef = useRef<HTMLElement>(null);
+
+  useFocusTrap({
+    active: mobileOpen,
+    containerRef: drawerRef,
+    onEscape: onCloseMobile,
+  });
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileOpen]);
+
   return (
     <>
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 border-r border-border bg-card md:block">
@@ -185,10 +202,13 @@ export function Sidebar({
             aria-hidden="true"
           />
           <aside
+            ref={drawerRef}
+            id="mobile-navigation"
             role="dialog"
             aria-modal="true"
             aria-label="Main navigation"
-            className="animate-drawer-left-in absolute inset-y-0 left-0 w-[17rem] max-w-[86vw] border-r border-border bg-card shadow-2xl"
+            tabIndex={-1}
+            className="animate-drawer-left-in absolute inset-y-0 left-0 w-[17rem] max-w-[86vw] border-r border-border bg-card shadow-2xl outline-none"
           >
             <SidebarBody
               active={active}

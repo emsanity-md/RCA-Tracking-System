@@ -261,7 +261,8 @@ export function IncidentTable({
                     }
                   }}
                   aria-label={`Open ${incident.incidentId}: ${incident.description}`}
-                  className="cursor-pointer border-b border-border/70 transition-colors last:border-0 hover:bg-foreground/[0.035] focus-visible:bg-foreground/[0.05] focus-visible:outline-none"
+                  aria-haspopup="dialog"
+                  className="cursor-pointer border-b border-border/70 transition-colors last:border-0 hover:bg-foreground/[0.035] focus-visible:bg-foreground/[0.05] focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-inset focus-visible:outline-none"
                 >
                   <td className="px-4 py-3 font-mono text-[0.72rem] font-medium whitespace-nowrap text-foreground">
                     {incident.incidentId}

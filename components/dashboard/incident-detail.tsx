@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 
 import {
@@ -13,6 +13,7 @@ import {
   PreventableBadge,
   StatusBadge,
 } from "@/components/dashboard/badges";
+import { useFocusTrap } from "@/lib/use-focus-trap";
 
 function DetailItem({
   label,
@@ -59,22 +60,26 @@ export function IncidentDetail({
   incident: Incident | null;
   onClose: () => void;
 }) {
+  const panelRef = useRef<HTMLElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useFocusTrap({
+    active: Boolean(incident),
+    containerRef: panelRef,
+    onEscape: onClose,
+    initialFocusRef: closeButtonRef,
+  });
+
   useEffect(() => {
     if (!incident) return;
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [incident, onClose]);
+  }, [incident]);
 
   if (!incident) return null;
 
@@ -87,10 +92,12 @@ export function IncidentDetail({
       />
 
       <aside
+        ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="incident-detail-title"
-        className="animate-panel-in dashboard-scroll absolute inset-y-0 right-0 flex w-full max-w-[30rem] flex-col overflow-y-auto border-l border-border bg-card shadow-2xl"
+        tabIndex={-1}
+        className="animate-panel-in dashboard-scroll absolute inset-y-0 right-0 flex w-full max-w-[30rem] flex-col overflow-y-auto border-l border-border bg-card shadow-2xl outline-none"
       >
         <header className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-border bg-card/95 px-5 py-4 backdrop-blur">
           <div className="min-w-0">
@@ -112,9 +119,9 @@ export function IncidentDetail({
             </p>
           </div>
           <button
+            ref={closeButtonRef}
             type="button"
             onClick={onClose}
-            autoFocus
             aria-label="Close detail panel"
             className="grid size-8 shrink-0 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:outline-none"
           >

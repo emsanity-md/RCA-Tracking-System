@@ -6,10 +6,12 @@ import { VIEW_TITLES, type ViewId } from "@/lib/incidents";
 
 export function Topbar({
   view,
+  menuOpen,
   onAdd,
   onOpenMenu,
 }: {
   view: ViewId;
+  menuOpen: boolean;
   onAdd: () => void;
   onOpenMenu: () => void;
 }) {
@@ -21,6 +23,8 @@ export function Topbar({
             type="button"
             onClick={onOpenMenu}
             aria-label="Open navigation"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
             className="grid size-9 shrink-0 place-items-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:outline-none md:hidden"
           >
             <Menu aria-hidden="true" className="size-4.5" />

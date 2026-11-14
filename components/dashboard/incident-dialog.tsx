@@ -128,6 +128,8 @@ export function IncidentDialog({
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const idInputRef = useRef<HTMLInputElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+  const capturedFocusRef = useRef(false);
   const [draft, setDraft] = useState<Draft>(() => ({
     ...createDraft(incidents),
     dateRecorded: todayISODate(),
@@ -138,6 +140,14 @@ export function IncidentDialog({
     const dialog = dialogRef.current;
     if (!dialog) return;
 
+    if (!capturedFocusRef.current) {
+      previouslyFocusedRef.current =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+      capturedFocusRef.current = true;
+    }
+
     if (!dialog.open) dialog.showModal();
     const frame = window.requestAnimationFrame(() =>
       idInputRef.current?.focus(),
@@ -145,6 +155,13 @@ export function IncidentDialog({
 
     return () => {
       window.cancelAnimationFrame(frame);
+      const previous = previouslyFocusedRef.current;
+      if (!previous) return;
+      window.requestAnimationFrame(() => {
+        if (document.contains(previous)) {
+          previous.focus({ preventScroll: true });
+        }
+      });
     };
   }, []);
 

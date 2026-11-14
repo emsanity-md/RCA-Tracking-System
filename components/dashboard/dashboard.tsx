@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useRouter } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 
 import type { Incident, ViewId } from "@/lib/incidents";
@@ -16,6 +17,7 @@ import {
 import { IncidentTable } from "@/components/dashboard/incident-table";
 import { IncidentDialog } from "@/components/dashboard/incident-dialog";
 import { IncidentDetail } from "@/components/dashboard/incident-detail";
+import { LogoutDialog } from "@/components/dashboard/logout-dialog";
 import {
   ActionsView,
   CausesView,
@@ -34,12 +36,15 @@ const getMonthSnapshot = () => currentMonthKey();
 const getServerMonthSnapshot = () => "";
 
 export function Dashboard() {
+  const router = useRouter();
+
   // The only source of truth for records. No storage, no seed data.
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [view, setView] = useState<ViewId>("overview");
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(
     null,
   );
@@ -86,6 +91,9 @@ export function Dashboard() {
 
   const closeDetail = useCallback(() => setSelectedIncident(null), []);
   const closeDialog = useCallback(() => setDialogOpen(false), []);
+  const openDialog = useCallback(() => setDialogOpen(true), []);
+  const openMobileMenu = useCallback(() => setMobileMenuOpen(true), []);
+  const closeMobileMenu = useCallback(() => setMobileMenuOpen(false), []);
   const resolvedIncidents = incidents.filter(
     (incident) => incident.status === "Resolved",
   );
@@ -119,13 +127,12 @@ export function Dashboard() {
     [pushToast],
   );
 
-  const handleLogout = useCallback(() => {
-    pushToast({
-      variant: "info",
-      title: "Logout is not implemented yet",
-      description: "This workspace keeps everything in memory for the session.",
-    });
-  }, [pushToast]);
+  const openLogout = useCallback(() => setLogoutOpen(true), []);
+  const stayLogout = useCallback(() => setLogoutOpen(false), []);
+  const confirmLogout = useCallback(() => {
+    setLogoutOpen(false);
+    router.push("/");
+  }, [router]);
 
   return (
     <div className="min-h-dvh bg-background text-foreground">
@@ -137,19 +144,28 @@ export function Dashboard() {
         onToggleTheme={() =>
           setTheme((current) => (current === "dark" ? "light" : "dark"))
         }
-        onLogout={handleLogout}
-        onCloseMobile={() => setMobileMenuOpen(false)}
+        onLogout={openLogout}
+        onCloseMobile={closeMobileMenu}
       />
 
-      <div className="flex min-h-dvh flex-col md:pl-60">
+      <div
+        className="flex min-h-dvh flex-col md:pl-60"
+        inert={
+          mobileMenuOpen || selectedIncident !== null || dialogOpen || logoutOpen
+            ? true
+            : undefined
+        }
+      >
         <Topbar
           view={view}
-          onAdd={() => setDialogOpen(true)}
-          onOpenMenu={() => setMobileMenuOpen(true)}
+          menuOpen={mobileMenuOpen}
+          onAdd={openDialog}
+          onOpenMenu={openMobileMenu}
         />
 
         <main
           id="main"
+          tabIndex={-1}
           className="mx-auto w-full max-w-[1500px] flex-1 px-4 py-6 pb-12 sm:px-6 lg:px-8 lg:py-8 lg:pb-14"
         >
           {view === "overview" ? (
@@ -273,6 +289,10 @@ export function Dashboard() {
           onCancel={closeDialog}
           onSave={handleSave}
         />
+      ) : null}
+
+      {logoutOpen ? (
+        <LogoutDialog onStay={stayLogout} onConfirm={confirmLogout} />
       ) : null}
 
       <IncidentDetail incident={selectedIncident} onClose={closeDetail} />

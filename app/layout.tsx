@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Space_Grotesk } from "next/font/google";
 
-import { RadarField } from "@/components/background/radar-field";
-
 import "./globals.css";
 
 const plex = IBM_Plex_Sans({
@@ -50,8 +48,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
-
-        <RadarField />
 
         <div className="relative z-10 flex min-h-dvh w-full flex-col">
           {children}

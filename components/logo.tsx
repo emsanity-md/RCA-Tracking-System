@@ -84,7 +84,7 @@ export function Logo({
           wordmarkClassName,
         )}
       >
-        Root Cause Analysis <span className="text-white/45">Tracker</span>
+        Root Cause Analysis <span className="text-foreground/45">Tracker</span>
       </span>
     </span>
   );
