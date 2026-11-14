@@ -1,0 +1,33 @@
+{
+  "docWidth": 1440,
+  "sections": [
+    {
+      "id": "top",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 1514
+    }
+  ],
+  "headings": [
+    {
+      "tag": "H1",
+      "text": "Every incident, explained and closed.",
+      "x": 336,
+      "y": 261,
+      "w": 768,
+      "h": 138
+    },
+    {
+      "tag": "H2",
+      "text": "Filler line stopped mid-batch",
+      "x": 293,
+      "y": 796,
+      "w": 854,
+      "h": 28
+    }
+  ],
+  "header": null,
+  "footer": null,
+  "overflow": []
+}

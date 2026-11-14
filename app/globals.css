@@ -1,0 +1,159 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-plex);
+  --font-heading: var(--font-grotesk);
+  --font-mono: var(--font-plex-mono);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  /* Raised surfaces, one step off the page. */
+  --color-panel: #0d0d0d;
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.5),
+    0 10px 30px -18px rgba(0, 0, 0, 0.85);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.55),
+    0 22px 48px -20px rgba(0, 0, 0, 0.9);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+/*
+ * Monochrome. One accent that is not an accent: pure white on pure black,
+ * with every other value a step of grey. Contrast against #000 is checked:
+ * foreground 17.4:1, muted-foreground 6.2:1 (AA at any size).
+ */
+:root {
+  color-scheme: dark;
+
+  --background: #000000;
+  --foreground: #f2f2f2;
+  --card: #070707;
+  --card-foreground: #f2f2f2;
+  --popover: #0a0a0a;
+  --popover-foreground: #f2f2f2;
+  --primary: #ffffff;
+  --primary-foreground: #000000;
+  --secondary: #121212;
+  --secondary-foreground: #f2f2f2;
+  --muted: #101010;
+  --muted-foreground: #8b8b8b;
+  --accent: #161616;
+  --accent-foreground: #ededed;
+  /* Semantic only, never used as a brand colour. */
+  --destructive: #e05252;
+  --border: #1f1f1f;
+  --input: #1f1f1f;
+  --ring: #ffffff;
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--foreground);
+    color: var(--background);
+  }
+}
+
+@layer components {
+  .section-title {
+    @apply font-heading text-[1.875rem] leading-[1.1] font-bold tracking-[-0.03em] text-balance sm:text-[2.25rem] lg:text-[2.6rem];
+  }
+
+  .section-lede {
+    @apply text-[0.975rem] leading-[1.75] text-muted-foreground sm:text-base;
+  }
+
+  .eyebrow-label {
+    @apply text-[0.7rem] font-semibold tracking-[0.18em] text-muted-foreground uppercase;
+  }
+
+  .icon-tile {
+    @apply grid size-10 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-white transition-colors duration-300;
+  }
+
+  .card-lift {
+    @apply transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-white/25 hover:shadow-lift;
+  }
+
+  .focus-ring {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
+  /* Hairline rule used between stacked blocks. */
+  .hairline {
+    @apply border-white/10;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
