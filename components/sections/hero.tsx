@@ -40,7 +40,7 @@ export function Hero() {
 
         <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a
-            href="/get-started"
+            href="/dashboard"
             className={cn(
               buttonVariants({ variant: "default" }),
               "h-11 w-full px-6 text-[0.9rem] sm:w-auto",

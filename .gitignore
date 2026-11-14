@@ -45,3 +45,7 @@ yarn-error.log*
 !.vscode/extensions.json
 .idea
 *.local
+
+# local screenshots and helper scripts
+/screenshots/
+/scripts/

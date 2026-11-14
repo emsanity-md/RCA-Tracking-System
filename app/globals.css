@@ -65,6 +65,51 @@
   --input: #1f1f1f;
   --ring: #ffffff;
   --radius: 0.75rem;
+
+  /* Chart palette: four steps of grey, dark to light. */
+  --chart-1: #f2f2f2;
+  --chart-2: #b3b3b3;
+  --chart-3: #767676;
+  --chart-4: #474747;
+  --chart-5: #2b2b2b;
+}
+
+/*
+ * Light theme. Same monochrome rules as dark: ink on paper, greys for
+ * everything secondary. Applied by the dashboard's theme toggle.
+ */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --background: #f5f5f4;
+  --foreground: #0b0b0b;
+  --card: #ffffff;
+  --card-foreground: #0b0b0b;
+  --popover: #ffffff;
+  --popover-foreground: #0b0b0b;
+  --primary: #0b0b0b;
+  --primary-foreground: #ffffff;
+  --secondary: #ececeb;
+  --secondary-foreground: #141414;
+  --muted: #efefee;
+  --muted-foreground: #5e5e5b;
+  --accent: #e5e5e3;
+  --accent-foreground: #0b0b0b;
+  --destructive: #b42323;
+  --border: #dededb;
+  --input: #d4d4d1;
+  --ring: #0b0b0b;
+
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.05),
+    0 10px 30px -18px rgba(0, 0, 0, 0.2);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.06),
+    0 22px 48px -20px rgba(0, 0, 0, 0.26);
+
+  --chart-1: #111111;
+  --chart-2: #4f4f4f;
+  --chart-3: #8a8a8a;
+  --chart-4: #b8b8b8;
+  --chart-5: #d8d8d5;
 }
 
 @layer base {
@@ -141,6 +186,90 @@
   .hairline {
     @apply border-white/10;
   }
+}
+
+/* Dashboard surfaces. Kept as plain CSS so the native dialog can use them too. */
+@keyframes dashboard-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dashboard-panel-in {
+  from {
+    opacity: 0.4;
+    transform: translateX(1.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes dashboard-drawer-left-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes dashboard-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-overlay-in {
+  animation: dashboard-overlay-in 180ms ease-out both;
+}
+
+.animate-panel-in {
+  animation: dashboard-panel-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-drawer-left-in {
+  animation: dashboard-drawer-left-in 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-dialog-in {
+  animation: dashboard-dialog-in 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.62);
+  backdrop-filter: blur(3px);
+}
+
+[data-theme="light"] dialog::backdrop {
+  background: rgba(20, 20, 18, 0.4);
+}
+
+/* Thin scrollbars that match either theme. */
+.dashboard-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.dashboard-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.dashboard-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
 }
 
 @media (prefers-reduced-motion: reduce) {
